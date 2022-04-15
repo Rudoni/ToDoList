@@ -180,8 +180,6 @@
           // Attach the new category to the corresponding list.
           document.querySelector('#custom-category-list').appendChild(categoryItem);
           // add the category to the array and save it to localStorage.
-          console.log(JSON.parse(myApp.services.categories_array));
-          console.log(myApp.services.fixtures);
           myApp.services.categories_array.push({
             label: categoryLabel
             });
@@ -295,10 +293,11 @@
     // Initial Data Service //
     ////////////////////////
     fixtures: 
-      JSON.parse(localStorage.getItem('fixtures')),
+      localStorage.getItem('fixtures') ? JSON.parse(localStorage.getItem('fixtures')) : [],
+
 
     categories_array:
-      JSON.parse(localStorage.getItem('categories'))
+      localStorage.getItem('categories') ? JSON.parse(localStorage.getItem('categories')) : []
     
 
   };
