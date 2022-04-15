@@ -58,11 +58,12 @@
                 message: 'Êtes-vous sûr de vouloir supprimer la tâche '+data.title+' ?',
                 buttonLabels: ['Annuler', 'Supprimer']
               }).then( (bouton) => {
-                  if(bouton === 1)
+                  if(bouton === 1){
                      myApp.services.tasks.remove(taskItem);
                      myApp.services.fixtures.splice(myApp.services.fixtures.indexOf(data),1);
                      // save in the localstorage
                       myApp.services.savetask();
+                  }
                 }
               );
         };
@@ -188,8 +189,8 @@
               title: 'Attention',
               message: 'Êtes-vous sûr de vouloir supprimer la catégorie '+categoryLabel+' ? Toutes les tâches associées seront supprimées',
               buttonLabels: ['Annuler', 'Supprimer']
-            }).then( (bouton) => {
-                if(bouton === 1)
+            }).then( function(bouton) {
+                if(bouton === 1){
                    myApp.services.categories.remove(categoryItem);
                    console.log(myApp.services.categories_array.indexOf(categoryLabel));
                    myApp.services.categories_array.splice(myApp.services.categories_array.indexOf(categoryLabel),1);
@@ -197,6 +198,7 @@
                    // save in the localstorage
                     myApp.services.savecategories();
                     myApp.services.savetask();
+                }
               }
             );
       };
