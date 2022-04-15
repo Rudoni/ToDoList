@@ -180,9 +180,7 @@
           // Attach the new category to the corresponding list.
           document.querySelector('#custom-category-list').appendChild(categoryItem);
           // add the category to the array and save it to localStorage.
-          myApp.services.categories_array.push({
-            label: categoryLabel
-            });
+          myApp.services.categories_array.push(categoryLabel);
           myApp.services.savecategories();
         }
         else{

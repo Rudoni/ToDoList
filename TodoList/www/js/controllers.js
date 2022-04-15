@@ -7,7 +7,7 @@
   //////////////////////////
   // Tabbar Page Controller //
   //////////////////////////
-  tabbarPage: function(page) {
+  tabbarPage: function(page) { 
     // Set button functionality to open/close the menu.
     page.querySelector('[component="button/menu"]').onclick = function() {
       document.querySelector('#mySplitter').left.toggle();
@@ -107,19 +107,20 @@
               .attr('value', newThing)
               .insertBefore($('option[value=new_category]', this));
           $(this).val(newThing);
+      } else if(page.querySelector("#category_chosen").querySelector("select").value !== "no_category"){
+
       }
     });
 
     // Set all categories in the category selector
-    console.log(myApp.services.categories_array);
-      myApp.services.categories_array.forEach(function(category) {
-        var newValue = $('option', this).length;
-        $('<option>')
-            .text(category.label)
-            .attr('value', newValue)
-            .insertBefore($('option[value=new_category]', this));
-        $(this).val(newValue);
-      }); 
+    myApp.services.categories_array.forEach(function(category) {
+      if(category !== ""){
+        var option = document.createElement('option');
+        option.innerText=category;
+        option.value = category;
+        page.querySelector('#category_chosen').options.add(option);
+      } 
+    });
     
   },
 
@@ -131,14 +132,16 @@
     // Get the element passed as argument to pushPage.
     var element = page.data.element;
     var old_element = page.data.old_element;
-
+    console.log(old_element.category);
+    console.log(page.querySelector("#category_chosen").querySelector("select").value);
     // Fill the view with the stored data.
-    console.log(element.data)
     page.querySelector('#title-input').value = element.data.title;
-    page.querySelector("#category_chosen").querySelector("select").value = element.data.category;
+    page.querySelector("#category_chosen").querySelector("select").value = old_element.category;
     page.querySelector('#description-input').value = element.data.description;
     page.querySelector('#highlight-input').checked = element.data.highlight;
     page.querySelector('#urgent-input').checked = element.data.urgent;
+
+    console.log(page.querySelector("#category_chosen").querySelector("select").value);
 
     // Set button functionality to save an existing task.
     page.querySelector('[component="button/save-task"]').onclick = function() {
@@ -193,7 +196,7 @@
     };
 
     page.querySelector("#category_chosen").addEventListener('change' , async function() {
-      console.log("f");
+      console.log("f"); 
       if (page.querySelector("#category_chosen").querySelector("select").value === "new_category")
       {
         // create  category and get input value
@@ -207,13 +210,15 @@
       }
     });
 
+   
     // Set all categories in the category selector
     myApp.services.categories_array.forEach(function(category) {
-      $('<option>')
-          .text(category.label)
-          .attr('value', category.label)
-          .insertBefore($('option[value=new_category]', this));
-      $(this).val(category.label);
-    }); 
+      if(category !== ""){
+        var option = document.createElement('option');
+        option.innerText=category;
+        option.value = category;
+        page.querySelector('#category_chosen').options.add(option);
+      } 
+    });
   }
 };
