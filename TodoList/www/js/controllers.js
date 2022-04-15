@@ -39,7 +39,41 @@
 
     page.querySelector('#button-new-categ').onclick = function() {
       myApp.services.categories.create();
-  };
+    };
+
+    page.querySelector('#delete_tasks').onclick = function(){
+      ons.notification.confirm(
+        {
+          title: 'Êtes-vous sûr de vouloir supprimer toutes les tâches ?',
+          message: 'Cette action est irréversible.',
+          buttonLabels: ['Annuler', 'Supprimer']
+        }
+      ).then(function(buttonIndex) {
+        if (buttonIndex === 1) {
+          localStorage.removeItem('fixtures');
+          document.location.reload()
+        }
+      });
+    };
+
+    page.querySelector('#delete_categories').onclick = function(){
+      ons.notification.confirm(
+        {
+          title: 'Êtes-vous sûr de vouloir supprimer toutes les catégories ?',
+          message: 'Cette action est irréversible.',
+          buttonLabels: ['Annuler', 'Supprimer']
+        }
+      ).then(function(buttonIndex) {
+        if (buttonIndex === 1) {
+          localStorage.removeItem('categories');
+          myApp.services.tasks.update_categories();
+          document.location.reload();
+        }
+      });
+    };
+
+
+  myApp.services.categories.show();
   },
 
   ////////////////////////////
@@ -136,7 +170,12 @@
     console.log(page.querySelector("#category_chosen").querySelector("select").value);
     // Fill the view with the stored data.
     page.querySelector('#title-input').value = element.data.title;
-    page.querySelector("#category_chosen").querySelector("select").value = old_element.category;
+    var newThing = old_element.category;
+          $('<option>')
+              .text(newThing)
+              .attr('value', newThing)
+              .insertBefore($('option[value=new_category]', this));
+          $(this).val(newThing);  
     page.querySelector('#description-input').value = element.data.description;
     page.querySelector('#highlight-input').checked = element.data.highlight;
     page.querySelector('#urgent-input').checked = element.data.urgent;

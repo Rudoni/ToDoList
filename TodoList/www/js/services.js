@@ -4,7 +4,7 @@
 
 
  myApp.services = {
-
+  
     /////////////////
     // Task Service //
     /////////////////
@@ -65,7 +65,6 @@
                       myApp.services.savetask();
                 }
               );
-        
         };
   
         // Add functionality to push 'details_task.html' page with the current element as a parameter.
@@ -115,8 +114,6 @@
         if (data.category !== taskItem.data.category) {
           // Modify the item before updating categories.
           taskItem.setAttribute('category', myApp.services.categories.parseId(data.category));
-          // Check if it's necessary to remove empty categories.
-          myApp.services.categories.updateRemove(taskItem.data.category);
   
         }
   
@@ -134,9 +131,22 @@
         myApp.services.animators.remove(taskItem, function() {
           // Remove the item before updating the categories.
           taskItem.remove();
-          // Check if the category has no items and remove it in that case.
-          myApp.services.categories.updateRemove(taskItem.data.category);
         });
+      },
+
+      remove_category: function(category){
+        myApp.services.fixtures.forEach(element => {
+          if(element.category === category){
+            myApp.services.fixtures.splice(myApp.services.fixtures.indexOf(element),1);
+           document.location.reload();
+          }
+        })
+      },
+
+      update_categories: function(){
+        myApp.services.fixtures.forEach(element => {
+          element.category = "";
+        })
       }
     },
   
@@ -144,6 +154,55 @@
     // Category Service //
     ////////////////////
     categories: {
+
+      show: function(){
+        myApp.services.categories_array.forEach(categoryLabel => {
+          if(categoryLabel !== ""){
+          var categoryId = myApp.services.categories.parseId(categoryLabel);
+
+          // Category item template.
+          var categoryItem = ons.createElement(
+            '<ons-list-item tappable category-id="' + categoryId + '">' +
+              '<div class="left">' +
+                '<ons-radio name="categoryGroup" input-id="radio-'  + categoryId + '"></ons-radio>' +
+              '</div>' +
+              '<label class="center" for="radio-' + categoryId + '">' +
+                (categoryLabel) +
+              '</label>' +
+              '<div class="right" id='+categoryLabel+'>' +
+              '<ons-icon style="color: grey; padding-left: 4px" icon="ion-ios-trash-outline, material:md-delete"></ons-icon>' +
+              '</div>' +
+            '</ons-list-item>'
+          );
+    
+          // Adds filtering functionality to this category item.
+          myApp.services.categories.bindOnCheckboxChange(categoryItem);
+    
+          // Attach the new category to the corresponding list.
+          document.querySelector('#custom-category-list').appendChild(categoryItem);
+
+          // Add button functionality to remove a category.
+          document.querySelector('#'+categoryLabel).onclick = function() {
+          ons.notification.confirm(
+              {
+              title: 'Attention',
+              message: 'Êtes-vous sûr de vouloir supprimer la catégorie '+categoryLabel+' ? Toutes les tâches associées seront supprimées',
+              buttonLabels: ['Annuler', 'Supprimer']
+            }).then( (bouton) => {
+                if(bouton === 1)
+                   myApp.services.categories.remove(categoryItem);
+                   console.log(myApp.services.categories_array.indexOf(categoryLabel));
+                   myApp.services.categories_array.splice(myApp.services.categories_array.indexOf(categoryLabel),1);
+                   myApp.services.tasks.remove_category(categoryLabel);
+                   // save in the localstorage
+                    myApp.services.savecategories();
+                    myApp.services.savetask();
+              }
+            );
+      };
+    }
+        });
+      },
   
       // Creates a new category and attaches it to the custom category list.
       create: async function() {
@@ -160,28 +219,11 @@
             
           message = categoryLabel;
 
-          var categoryId = myApp.services.categories.parseId(categoryLabel);
-
-          // Category item template.
-          var categoryItem = ons.createElement(
-            '<ons-list-item tappable category-id="' + categoryId + '">' +
-              '<div class="left">' +
-                '<ons-radio name="categoryGroup" input-id="radio-'  + categoryId + '"></ons-radio>' +
-              '</div>' +
-              '<label class="center" for="radio-' + categoryId + '">' +
-                (categoryLabel) +
-              '</label>' +
-            '</ons-list-item>'
-          );
-    
-          // Adds filtering functionality to this category item.
-          myApp.services.categories.bindOnCheckboxChange(categoryItem);
-    
-          // Attach the new category to the corresponding list.
-          document.querySelector('#custom-category-list').appendChild(categoryItem);
           // add the category to the array and save it to localStorage.
           myApp.services.categories_array.push(categoryLabel);
           myApp.services.savecategories();
+          document.querySelector('#custom-category-list').innerHTML = "";
+          myApp.services.categories.show();
         }
         else{
         // Insert a message to the user for insering the category name.
@@ -204,16 +246,7 @@
   
       },
   
-      // On task deletion/update, updates the category list removing categories without tasks if needed.
-      updateRemove: function(categoryLabel) {
-        var categoryId = myApp.services.categories.parseId(categoryLabel);
-        var categoryItem = document.querySelector('#tabbarPage ons-list-item[category="' + categoryId + '"]');
-  
-        if (!categoryItem) {
-          // If there are no tasks under this category, remove it.
-          myApp.services.categories.remove(document.querySelector('#custom-category-list ons-list-item[category-id="' + categoryId + '"]'));
-        }
-      },
+      
   
       // Deletes a category item and its listeners.
       remove: function(categoryItem) {
