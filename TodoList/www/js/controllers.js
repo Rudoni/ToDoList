@@ -88,6 +88,7 @@
         if (newTitle.replace(/ /g, "") !== '') {
           // If input title is not empty, create a new task.
 
+          console.log(page.querySelector("#category_chosen").querySelector("select").value);
           let categ = page.querySelector("#category_chosen").querySelector("select").value === "no_category" ? "" : page.querySelector("#category_chosen").querySelector("select").value;
           console.log(categ);
           data = {
@@ -141,8 +142,6 @@
               .attr('value', newThing)
               .insertBefore($('option[value=new_category]', this));
           $(this).val(newThing);
-      } else if(page.querySelector("#category_chosen").querySelector("select").value !== "no_category"){
-
       }
     });
 
@@ -197,9 +196,11 @@
         ).then(function(buttonIndex) {
           if (buttonIndex === 1) {
 
+
+            let categ = page.querySelector("#category_chosen").querySelector("select").value === "no_category" ? "" : page.querySelector("#category_chosen").querySelector("select").value;
             elementupdated = {
               title: newTitle,
-              category: page.querySelector("#category_chosen").querySelector("select").value,
+              category: categ,
               description: page.querySelector('#description-input').value,
               ugent: element.data.urgent,
               highlight: page.querySelector('#highlight-input').checked,
