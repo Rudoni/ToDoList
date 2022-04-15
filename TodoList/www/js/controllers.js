@@ -88,9 +88,7 @@
         if (newTitle.replace(/ /g, "") !== '') {
           // If input title is not empty, create a new task.
 
-          console.log(page.querySelector("#category_chosen").querySelector("select").value);
           let categ = page.querySelector("#category_chosen").querySelector("select").value === "no_category" ? "" : page.querySelector("#category_chosen").querySelector("select").value;
-          console.log(categ);
           data = {
             title: newTitle,
             category: categ,
@@ -110,9 +108,6 @@
 
           // save the new task to localStorage
           myApp.services.savetask();
-
-          console.log(myApp.services.fixtures);
-          console.log(localStorage.getItem('fixtures'));
 
 
           // Set selected category to 'All', refresh and pop page.
@@ -165,21 +160,11 @@
     // Get the element passed as argument to pushPage.
     var element = page.data.element;
     var old_element = page.data.old_element;
-    console.log(old_element.category);
-    console.log(page.querySelector("#category_chosen").querySelector("select").value);
     // Fill the view with the stored data.
     page.querySelector('#title-input').value = element.data.title;
-    var newThing = old_element.category;
-          $('<option>')
-              .text(newThing)
-              .attr('value', newThing)
-              .insertBefore($('option[value=new_category]', this));
-          $(this).val(newThing);  
     page.querySelector('#description-input').value = element.data.description;
     page.querySelector('#highlight-input').checked = element.data.highlight;
     page.querySelector('#urgent-input').checked = element.data.urgent;
-
-    console.log(page.querySelector("#category_chosen").querySelector("select").value);
 
     // Set button functionality to save an existing task.
     page.querySelector('[component="button/save-task"]').onclick = function() {
@@ -190,7 +175,6 @@
         ons.notification.confirm(
           {
             title: 'Êtes-vous sûr de sauvegarder les données ?',
-            message: 'Les changements seront définitifs.',
             buttonLabels: ['Annuler', 'Sauvegarder']
           }
         ).then(function(buttonIndex) {
@@ -236,12 +220,10 @@
     };
 
     page.querySelector("#category_chosen").addEventListener('change' , async function() {
-      console.log("f"); 
       if (page.querySelector("#category_chosen").querySelector("select").value === "new_category")
       {
         // create  category and get input value
           var newThing= await myApp.services.categories.create();
-          console.log(newThing);
           $('<option>')
               .text(newThing)
               .attr('value', newThing)

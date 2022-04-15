@@ -93,7 +93,6 @@
         pendingList.insertBefore(taskItem, taskItem.data.urgent ? pendingList.firstChild : null);
 
 
-        console.log(taskItem.data);
 
         // Insert the task in the complete section or pending section.
         if(taskItem.data.completed === 'checked') 
@@ -148,6 +147,7 @@
         myApp.services.fixtures.forEach(element => {
           element.category = "";
         })
+        myApp.services.savetask();
       }
     },
   
@@ -170,7 +170,7 @@
               '<label class="center" for="radio-' + categoryId + '">' +
                 (categoryLabel) +
               '</label>' +
-              '<div class="right" id='+categoryLabel+'>' +
+              '<div class="right" id='+categoryLabel.replace(/(?!\w|\s)./g, '').replace(/^(\s*)([\W\w]*)(\b\s*$)/g, '$2').replace(/ /g, "")+'>' +
               '<ons-icon style="color: grey; padding-left: 4px" icon="ion-ios-trash-outline, material:md-delete"></ons-icon>' +
               '</div>' +
             '</ons-list-item>'
@@ -183,7 +183,7 @@
           document.querySelector('#custom-category-list').appendChild(categoryItem);
 
           // Add button functionality to remove a category.
-          document.querySelector('#'+categoryLabel).onclick = function() {
+          document.querySelector('#'+categoryLabel.replace(/(?!\w|\s)./g, '').replace(/^(\s*)([\W\w]*)(\b\s*$)/g, '$2').replace(/ /g, "")).onclick = function() {
           ons.notification.confirm(
               {
               title: 'Attention',
@@ -192,7 +192,6 @@
             }).then( function(bouton) {
                 if(bouton === 1){
                    myApp.services.categories.remove(categoryItem);
-                   console.log(myApp.services.categories_array.indexOf(categoryLabel));
                    myApp.services.categories_array.splice(myApp.services.categories_array.indexOf(categoryLabel),1);
                    myApp.services.tasks.remove_category(categoryLabel);
                    // save in the localstorage
@@ -265,6 +264,8 @@
         var allItems = categoryId === null;
   
         categoryItem.updateCategoryView = function() {
+
+          document.getElementById('category_title').innerText = categoryId;
           var query = '[category="' + (categoryId || '') + '"]';
   
           var taskItems = document.querySelectorAll('#tabbarPage ons-list-item');
