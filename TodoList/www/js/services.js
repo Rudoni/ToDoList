@@ -12,9 +12,14 @@
   
       // Creates a new task and attaches it to the pending task list.
       create: function(data) {
-        
 
-        
+
+        myApp.services.fixtures.forEach(element => {
+          var date = new Date(element.date);
+          if(!(date > Date.now()))
+            myApp.services.fixtures.splice(myApp.services.fixtures.indexOf(element),1);
+        });
+
         // Task item template.
         var taskItem = ons.createElement(
           '<ons-list-item tappable category="' + myApp.services.categories.parseId(data.category)+ '">' +
@@ -30,7 +35,6 @@
           '</ons-list-item>'
         );
 
-        console.log(taskItem);
   
         // Store data within the element.
         taskItem.data = data;
@@ -43,7 +47,10 @@
               taskItem.data.completed = 'checked';
             else
               taskItem.data.completed = '';
-            document.querySelector(listId).appendChild(taskItem);
+            if(taskItem.data.urgent)
+              document.querySelector(listId).insertBefore(taskItem,document.querySelector(listId).firstChild);
+            else
+              document.querySelector(listId).appendChild(taskItem);
             // save the new task to localStorage
             myApp.services.savetask();
           });
@@ -101,8 +108,7 @@
           document.querySelector('#completed-list').appendChild(taskItem);
         else
           document.querySelector('#pending-list').appendChild(taskItem);
-
-
+          console.log(myApp.services.fixtures);
       },
   
       // Modifies the inner data and current view of an existing task.

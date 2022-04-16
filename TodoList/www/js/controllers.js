@@ -84,8 +84,9 @@
     Array.prototype.forEach.call(page.querySelectorAll('[component="button/save-task"]'), function(element) {
       element.onclick = function() {
         var newTitle = page.querySelector('#title-input').value;
+        var date = new Date(page.querySelector('#date-input').value);
 
-        if (newTitle.replace(/ /g, "") !== '') {
+        if (newTitle.replace(/ /g, "") !== '' && date > Date.now()) {
           // If input title is not empty, create a new task.
 
           let categ = page.querySelector("#category_chosen").querySelector("select").value === "no_category" ? "" : page.querySelector("#category_chosen").querySelector("select").value;
@@ -95,6 +96,7 @@
             description: page.querySelector('#description-input').value,
             highlight: page.querySelector('#highlight-input').checked,
             urgent: page.querySelector('#urgent-input').checked,
+            date : page.querySelector('#date-input').value,
             completed: ''
           };
 
@@ -102,7 +104,7 @@
 
           // Add the task item to the fixtures and the category to the array.
           myApp.services.fixtures.push(data);
-          myApp.services.categories_array.push(data.category);
+          
 
           
 
@@ -115,12 +117,21 @@
           document.querySelector('#default-category-list ons-list-item').updateCategoryView();
           document.querySelector('#myNavigator').popPage();
 
-        } else {
+        } else if(date > Date.now()){
           // Show alert if the input title is empty.
           ons.notification.confirm(
             {
               title: 'Attention',
               message: 'Veuillez saisir un titre pour pouvoir créer une tâche.',
+              buttonLabels: ['ça marche chef']
+            }
+          );
+        }
+        else {
+          ons.notification.confirm(
+            {
+              title: 'Attention',
+              message: "La date d'échéance ne peut pas être inférieure ou égale à la date actuelle",
               buttonLabels: ['ça marche chef']
             }
           );
@@ -139,6 +150,7 @@
           $(this).val(newThing);
       }
     });
+    
 
     // Set all categories in the category selector
     myApp.services.categories_array.forEach(function(category) {
@@ -165,12 +177,14 @@
     page.querySelector('#description-input').value = element.data.description;
     page.querySelector('#highlight-input').checked = element.data.highlight;
     page.querySelector('#urgent-input').checked = element.data.urgent;
+    page.querySelector('#date-input').value = element.data.date;
 
     // Set button functionality to save an existing task.
     page.querySelector('[component="button/save-task"]').onclick = function() {
       var newTitle = page.querySelector('#title-input').value;
+      var date = new Date(page.querySelector('#date-input').value);
 
-      if (newTitle.replace(/ /g, "")!== '') {
+      if (newTitle.replace(/ /g, "")!== '' && date > Date.now()) {
         // If input title is not empty, ask for confirmation before saving.
         ons.notification.confirm(
           {
@@ -181,6 +195,8 @@
         ).then(function(buttonIndex) {
           if (buttonIndex === 1) {
 
+            if(page.querySelector('#date-input').value <= Date.now())
+              return;
 
             let categ = page.querySelector("#category_chosen").querySelector("select").value === "no_category" ? "" : page.querySelector("#category_chosen").querySelector("select").value;
             elementupdated = {
@@ -189,6 +205,7 @@
               description: page.querySelector('#description-input').value,
               urgent: page.querySelector('#urgent-input').checked,
               highlight: page.querySelector('#highlight-input').checked,
+              date : page.querySelector('#date-input').value,
               completed:old_element.completed
             };
 
@@ -208,12 +225,21 @@
           }
         });
 
-      } else {
+      } else if(date > Date.now()){
         // Show alert if the input title is empty.
         ons.notification.confirm(
           {
             title: 'Attention',
             message: 'Veuillez saisir un titre.',
+            buttonLabels: ['ça marche chef']
+          }
+        );
+      }
+      else{
+        ons.notification.confirm(
+          {
+            title: 'Attention',
+            message: "La date d'échéance ne peut pas être inférieure ou égale à la date actuelle",
             buttonLabels: ['ça marche chef']
           }
         );
