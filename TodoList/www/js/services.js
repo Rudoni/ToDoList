@@ -286,7 +286,7 @@
               document.getElementById('category_title').innerText = categoryId;
           }
           else 
-              document.getElementById('category_title').innerText = "Toutes les catégories";
+              document.getElementById('category_title').innerText = "Toutes catégories";
           var query = '[category="' + (categoryId || '') + '"]';
   
           var taskItems = document.querySelectorAll('#tabbarPage ons-list-item');
