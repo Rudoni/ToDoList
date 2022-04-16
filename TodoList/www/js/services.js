@@ -279,8 +279,14 @@
         var allItems = categoryId === null;
   
         categoryItem.updateCategoryView = function() {
-
-          document.getElementById('category_title').innerText = categoryId;
+          if(categoryId != null){
+            if(categoryId === "")
+              document.getElementById('category_title').innerText = "Sans catégorie";
+            else
+              document.getElementById('category_title').innerText = categoryId;
+          }
+          else 
+              document.getElementById('category_title').innerText = "Toutes les catégories";
           var query = '[category="' + (categoryId || '') + '"]';
   
           var taskItems = document.querySelectorAll('#tabbarPage ons-list-item');
