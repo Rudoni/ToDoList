@@ -142,12 +142,12 @@
       if (page.querySelector("#category_chosen").querySelector("select").value === "new_category")
       {
         // create  category and get input value
-          var newThing= await myApp.services.categories.create();
-          $('<option>')
-              .text(newThing)
-              .attr('value', newThing)
-              .insertBefore($('option[value=new_category]', this));
-          $(this).val(newThing);
+        var newThing= await myApp.services.categories.create();
+        var option = document.createElement('option');
+        option.innerText=newThing;
+        option.value = newThing;
+        page.querySelector('#category_chosen').options.add(option);
+        page.querySelector('#category_chosen').value = newThing;
       }
     });
     
@@ -251,11 +251,11 @@
       {
         // create  category and get input value
           var newThing= await myApp.services.categories.create();
-          $('<option>')
-              .text(newThing)
-              .attr('value', newThing)
-              .insertBefore($('option[value=new_category]', this));
-          $(this).val(newThing);
+          var option = document.createElement('option');
+          option.innerText=newThing;
+          option.value = newThing;
+          page.querySelector('#category_chosen').options.add(option);
+          page.querySelector('#category_chosen').value = newThing;
       }
     });
 
@@ -270,6 +270,6 @@
       } 
     });
 
-    page.querySelector('#category_chosen').value === "" ? "no_category" : element.data.category;
+    element.data.category === "" ? page.querySelector('#category_chosen').value = "no_category" : page.querySelector('#category_chosen').value = element.data.category;
   }
 };
