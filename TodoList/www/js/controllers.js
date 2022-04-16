@@ -269,5 +269,7 @@
         page.querySelector('#category_chosen').options.add(option);
       } 
     });
+
+    page.querySelector('#category_chosen').value === "" ? "no_category" : element.data.category;
   }
 };
