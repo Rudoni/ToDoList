@@ -22,13 +22,15 @@
              '<ons-checkbox '+data.completed+'>'+'</ons-checkbox>' +
             '</label>' +
             '<div class="center">' +
-              data.title +
+              data.title + (data.urgent ? '<strong> &nbsp;URGENT </strong>' : '') +
             '</div>' +
             '<div class="right">' +
               '<ons-icon style="color: grey; padding-left: 4px" icon="ion-ios-trash-outline, material:md-delete"></ons-icon>' +
             '</div>' +
           '</ons-list-item>'
         );
+
+        console.log(taskItem);
   
         // Store data within the element.
         taskItem.data = data;
@@ -105,6 +107,14 @@
   
       // Modifies the inner data and current view of an existing task.
       update: function(taskItem, data) {
+
+        var pendingList = document.querySelector('#pending-list');
+        if(data.urgent){
+          pendingList.insertBefore(taskItem, pendingList.firstChild);
+          taskItem.querySelector('.center').innerHTML = data.title + '<strong> &nbsp;URGENT </strong>';
+        }
+
+
         if (data.title !== taskItem.data.title) {
           // Update title view.
           taskItem.querySelector('.center').innerHTML = data.title;

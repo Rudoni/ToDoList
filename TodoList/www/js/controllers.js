@@ -174,7 +174,8 @@
         // If input title is not empty, ask for confirmation before saving.
         ons.notification.confirm(
           {
-            title: 'Êtes-vous sûr de sauvegarder les données ?',
+            title: 'Attention',
+            message:"Êtes-vous sûr de sauvegarder les données ?",
             buttonLabels: ['Annuler', 'Sauvegarder']
           }
         ).then(function(buttonIndex) {
@@ -186,7 +187,7 @@
               title: newTitle,
               category: categ,
               description: page.querySelector('#description-input').value,
-              ugent: element.data.urgent,
+              urgent: page.querySelector('#urgent-input').checked,
               highlight: page.querySelector('#highlight-input').checked,
               completed:old_element.completed
             };
