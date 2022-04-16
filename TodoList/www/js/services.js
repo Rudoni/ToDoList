@@ -108,7 +108,6 @@
           document.querySelector('#completed-list').appendChild(taskItem);
         else
           document.querySelector('#pending-list').appendChild(taskItem);
-          console.log(myApp.services.fixtures);
       },
   
       // Modifies the inner data and current view of an existing task.
